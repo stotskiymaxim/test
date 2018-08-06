@@ -21,19 +21,16 @@ function clearDate($date){
 $header=clearDate($_POST['header']);
 $body=clearDate($_POST['body']);
 $status=clearDate($_POST['status']);
-$user = clearDate($_SESSION['user_id']);
-
+$user = (int)$_SESSION['user_id'];
 //$status=$_POST['status'];
 
 if(!empty($header) && !empty($body) ){
     //вызовем метод saveletter
-    if($task->savetask($header,$body,$status,time(),$user)){
+    $task->savetask($header,$body,$status,time(),$user);
         // Перезапрашиваем страницу, чтобы избавиться от информации,
         //переданной через форму
         //header('Location: Tasks.php');
-    }else{
-        echo "Произошла ошибка при добавлении сообщения";
-    }
+
 }else{
     echo "Заполните все поля формы!";
 }

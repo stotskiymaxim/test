@@ -1,4 +1,5 @@
 <?php
+session_start();
 /**
  * Created by PhpStorm.
  * User: Max
@@ -10,9 +11,10 @@ $id=abs((int)$_POST['id']);
 $header=$_POST['header'];
 $body=$_POST['body'];
 $status=$_POST['status'];
+$user = (int)$_SESSION['user_id'];
 if($id && $header && $body && $status){
     $task = new Task();
-    $task->updatetask($id,$header,$body,$status,time());
+    $task->updatetask($id,$header,$body,$status,time(),$user);
 
     exit;
 }else {

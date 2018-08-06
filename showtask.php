@@ -7,12 +7,14 @@
  */
 
 ?>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-    <script src="crud.js"></script>
+
 <?php
 require_once "Task.php";
     $task = new Task();
-
+?>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script src="edit.js"></script>
+<?php
 //$task = new Task();
     $alltasks = $task->showtask();
     //Используя цикл, выведите в браузер все сообщения
@@ -45,15 +47,14 @@ require_once "Task.php";
             }
             ?>
             <?php if($status == 3){?>
-                <input s class="btn" type="button3" id="3" value=Done>
+                <input s class="btn" type="button" id="3" value=Done>
                 <?php
             }
             ?>
         </div>
 
 
-            <input id="del" type="button" name="<?php echo $id ?>" value="X">
-            <input id="upd" type="button" name="<?php echo $id ?>" value="\">
+        <i id=del name="<?php echo $id ?>" class="material-icons">delete</i> <i id=upd name="<?php echo $id ?>" class="material-icons">edit</i>
 
 
     </div>

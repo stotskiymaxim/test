@@ -5,7 +5,7 @@
  * Date: 01.08.2018
  * Time: 9:51
  */
-
+session_start();
 class User
 {
     private $id;
@@ -54,6 +54,9 @@ class User
 
     public function getSalt($username) {
         $query = "select salt from users where username = :username limit 1";
+        if (stristr($username, '@') == true) {
+            $query = "select salt from users where email = :username limit 1";
+        }
         $sth = $this->db->prepare($query);
         $sth->execute(
             array(
@@ -123,15 +126,20 @@ class User
             $cookie = setcookie("sid", $sid, $expire, $path, $domain, $secure, $http_only);
         }
     }
-    public function create($username, $password) {
+    public function create($username, $password, $email) {
         $user_exists = $this->getSalt($username);
+        $email_exists = $this->getSalt($email);
 
         if ($user_exists) {
-            throw new Exception("User exists: " . $username, 1);
+            throw new Exception("Пользователь с таким login: " . $username . " уже существует!", 1);
         }
 
-        $query = "insert into users (username, password, salt)
-            values (:username, :password, :salt)";
+        if ($email_exists) {
+            throw new Exception("Пользователь с таким e-mail: " . $email . " уже существует!", 1);
+        }
+
+        $query = "insert into users (username, password, email, salt)
+            values (:username, :password, :email, :salt)";
         $hashes = $this->passwordHash($password);
         $sth = $this->db->prepare($query);
 
@@ -141,6 +149,7 @@ class User
                 array(
                     ':username' => $username,
                     ':password' => $hashes['hash'],
+                    ':email' => $email,
                     ':salt' => $hashes['salt'],
                 )
             );

@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require_once "User.php";
 
 if (isset($_POST['login'])){
@@ -16,6 +16,15 @@ if (isset($_POST['password'])){
         exit ("Введите пароль");
     }
 }
+
+if (isset($_POST['email'])){
+    $email = $_POST['email'];
+    if ($email == '') {
+        unset($email);
+        exit ("Введите e-mail");
+    }
+}
+
 $login = stripslashes($login);
 $login = htmlspecialchars($login);
 $password = stripslashes($password);
@@ -24,10 +33,9 @@ $password = htmlspecialchars($password);
 $login = trim($login);
 $password = trim($password);
 $user = new User();
-if(!$user->authorize($login,$password,true)){
-    exit ("Извините, введённый вами логин или пароль неверный.");
-}
-else{
+try {
+    $user->create($login, $password, $email);
     echo 1;
-
+}catch (Exception $e) {
+        echo $e->getMessage();
 }

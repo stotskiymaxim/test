@@ -1,13 +1,13 @@
 $(document).ready(function(){
     var height = $(document).outerHeight(true);
     $(".block-left").css("height",height);
+    $("#s").hide();
 });
 
 
-var ids=null;
 
         $(document).ready(function(){
-            $('#form1').submit(function(){
+            $('#c').click(function(){
 
             var header = $("#header").val();
             var body = $("#bod").val();
@@ -23,6 +23,7 @@ var ids=null;
                 status: status
             },
             success: function(data){
+                $("#content").load("showtask.php");
             },
             error: function() {
 
@@ -34,35 +35,7 @@ var ids=null;
 
 
 
-$( document ).ready(function() {
-    $("[id=del]").click(
-        function(){
-            var del = $(this).attr("name");
-// Ваш скрипт
-            if(confirm("Удалить эту запись?")){
-            //document.getElementById('message').innerHTML = "Пожалуйста, заполните все поля формы!";
-            $.ajax({
-                url: "deletetask.php",
-                type: "GET",
-                data: {del: del},
-                success: function(data){
-                    $("#content").load("showtask.php");
 
-                    //document.getElementById('content').inhnerHTML = $("#content");
-                    //location.reload();
-                    //alert(data);
-                },
-                error: function() {
-                    alert("error");
-                }
-            });
-            }
-            else {
-
-            }
-        }
-    );
-});
 
 
 $(document).ready(function(){
@@ -102,7 +75,11 @@ $(document).ready(function(){
                     status: status
                 },
                 success: function(data){
+                    $("#s").hide();
+                    $(".block-right h2").text("Создать задачу");
+                    $("#c").show();
                     $("#content").load("showtask.php");
+
                 },
                 error: function() {
 
@@ -113,7 +90,7 @@ $(document).ready(function(){
 });
 
 $(document).ready(function(){
-    $('#login-form').submit(function(){
+    $('#login').click(function(){
         var login = $("#username").val();
         var password = $("#pass").val();
             $.ajax({
@@ -140,55 +117,52 @@ $(document).ready(function(){
     );
 });
 
-$( document ).ready(function() {
-    $("[id=upd]").click(
-        function(){
+$(document).ready(function(){
+    $('#reg').click(function(){
+            var login = $("#username_r").val();
+            var password = $("#pass_r").val();
+            var email = $("#email").val();
+            $.ajax({
+                url: "registration.php",
+                type: "POST",
+                data: {
+                    login: login,
+                    password: password,
+                    email: email
+                },
+                success: function(data){
+                    if(data == 1){
+                        window.location.replace("index.php");
+                    }
+                    else {
+                        alert(data)
+                    }
+                },
+                error: function() {
 
-            var user = $(this).parent(".blok").find(".user").html();
-            var time = $(this).parent(".blok").find(".data").html();
-            var status = $(this).parent(".blok").find(".btn").attr("id");
-            var id = $(this).attr("name");
-            var idbtn = "#btn"+status;
-            $(".block-right :button").removeClass();
-            $(".block-right :button").css("background-color", "");
-            $(idbtn).addClass("active");
-            $(idbtn).css("background-color", "#4CAF50");
-
-            $("#header").val($(this).parent(".blok").find("#head").html());
-
-            $("#bod").val($(this).parent(".blok").find("#body").html());
-            $(".block-right h2").text("Редактирование задачи");
-            $("#Submit").val("Обновить");
-            ids = id;
-
-
+                }
+            });
         }
     );
 });
 
-
-function del(){
-    document.getElementById('dictionary').querySelectorAll('tr').forEach(function(e) {
-        e.onclick = function() {
-            var id = this.cells[0].innerHTML;
-            $.ajax({
-                url: "delete.php",
-                type: "GET",
-                data: { // данные, которые будут отправлены на сервер
-                    id: id
-                },
-                success: function(data){
-                    if(serc==true){
-                        $('#myForm').submit();
-                    }else{
-                        $("#dictionary").load("main.php #dictionary");
-                    }
-                },
-                error: function(){
-                    alert("Error");
-                }
-            });
-            return false;
+$(document).ready(function() {
+    $('#email').blur(function() {
+        if($(this).val() != '') {
+            var pattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i;
+            if(pattern.test($(this).val())){
+                $(this).css({'border' : '1px solid #569b44'});
+                $('#valid').text('Верно');
+            } else {
+                $(this).css({'border' : '1px solid #ff0000'});
+                $('#valid').text('Не верно');
+            }
+        } else {
+            $(this).css({'border' : '1px solid #ff0000'});
+            $('#valid').text('Поле email не должно быть пустым');
         }
     });
-}
+});
+
+
+
